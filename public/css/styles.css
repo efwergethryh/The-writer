@@ -1,0 +1,363 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+}
+
+header {
+  background-color: #ffffff;
+  color: white;
+  height: 10px;
+  text-align: center;
+  padding: 10px;
+}
+
+.welcome {
+  color: #000000;
+}
+
+nav {
+  background-color: #ffffff;
+  padding: 10px;
+}
+
+main {
+  padding: 20px;
+}
+
+section {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.card {
+
+  padding: 20px;
+  margin-top: 100px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: block;
+}
+
+/* Style the navbar */
+#navbar {
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+/* Navbar links */
+#navbar a {
+  float: left;
+  display: block;
+  color: #000000;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+}
+
+/* Page content */
+.content {
+  padding: 16px;
+}
+
+/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+i {
+  color: #000000;
+}
+
+/* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
+.sticky+.content {
+  padding-top: 60px;
+}
+
+.card-blog {
+  width: 1200px;
+
+  padding: 20px;
+  margin-top: 150px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.card-blog p {
+  font-size: x-large;
+
+}
+
+.card h1 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+p {
+  font-size: large;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+
+  bottom: 0;
+  width: 100%;
+  left: -16px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-link {
+  text-decoration: none;
+  color: #000000;
+  font-weight: bold;
+}
+
+.avatar {
+  /* position: relative;
+    right: -600px; */
+  display: inline-block;
+  cursor: pointer;
+}
+
+.avatar img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+
+}
+
+.avatar .edit {
+  color: aqua;
+
+  .avatar-edit {
+    position: absolute;
+    right: 40px;
+    z-index: 1;
+    top: 90px;
+
+    input {
+      display: none;
+
+      +label {
+        display: inline-block;
+        width: 34px;
+        height: 34px;
+        margin-bottom: 0;
+        border-radius: 100%;
+        background: #FFFFFF;
+        border: 1px solid #d2d6de;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+        cursor: pointer;
+        font-weight: normal;
+        transition: all .2s ease-in-out;
+
+        &:hover {
+          background: #f1f1f1;
+          border-color: #d6d6d6;
+        }
+
+        &:after {
+          content: "\f030";
+          font-family: 'FontAwesome';
+          color: #337AB7;
+          position: absolute;
+          left: 0;
+          right: 0;
+          text-align: center;
+          line-height: 34px;
+          margin: auto;
+        }
+      }
+    }
+  }
+}
+
+.edit img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: relative;
+  left: -250px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.avatar:hover .dropdown-content {
+  display: block;
+}
+
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 50px;
+  right: 400px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  max-width: 800px;
+  max-height: 600px;
+
+}
+.confirmationPopup {
+  display: none;
+  position: fixed;
+  top: 50px;
+  right: 400px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  max-width: 800px;
+  max-height: 600px;
+
+}
+.edit-profile {
+  display: none;
+  position: fixed;
+  top: 50px;
+  right: 400px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  max-width: 800px;
+  max-height: 600px;
+
+}
+
+.content {
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  /* Add a shadow effect */
+  padding: 20px;
+
+  position: absolute;
+  /* Position the content relative to the popup container */
+  top: 50%;
+  /* Center the content vertically */
+  left: 50%;
+  /* Center the content horizontally */
+  transform: translate(-50%, -50%);
+  /* Center the content precisely */
+  width: 1000px;
+  height: 600px;
+
+}
+
+.content .close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.content .close:hover,
+.content .close:focus {
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Popup content styles */
+.popup-content {
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  /* Add a shadow effect */
+  padding: 20px;
+
+  position: absolute;
+  /* Position the content relative to the popup container */
+  top: 50%;
+  /* Center the content vertically */
+  left: 50%;
+  /* Center the content horizontally */
+  transform: translate(-50%, -50%);
+  /* Center the content precisely */
+  width: 1000px;
+  height: 600px;
+
+}
+
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-edit {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.custom-icon {
+  font-size: 30px;
+  /* Adjust the font size as needed */
+  float: inline-end;
+  margin-top: 20px;
+  margin-right: 30px;
+}
+
+.container {
+  display: flex;
+  justify-content: flex-end;
+  /* Position the navigation at the end */
+  padding: 10px;
+  /* Add some padding for spacing */
+}
+
+.navigation {
+  display: flex;
+}
+
+.navigation a {
+  margin-left: 10px;
+  /* Add some space between navigation items */
+  text-decoration: none;
+}

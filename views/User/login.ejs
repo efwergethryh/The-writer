@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        background-image: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .login-container {
+        position: relative;
+        width: 300px;
+        left: -75vh;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+    }
+
+    .login-container h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    .login-form {
+        display: flex;
+
+        flex-direction: column;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+
+    }
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+        color: #f4f4f4;
+    }
+
+    .form-group input {
+        width: 100%;    
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+    }
+
+    .form-group button {
+        background-color: rgba(0, 0, 0, 0.4);
+        color: #fff;
+        padding: 10px 133px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .form-group button:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .container {
+        display: flex;
+        position: relative;
+
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: transparent;
+        height: fit-content;
+    }
+
+    .google-button {
+        display: inline-flex;
+        align-items: center;
+        position: relative;
+        justify-content: center;
+        background-color: #fff;
+        color: #000;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 103px;
+        top: -10px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .google-button:hover {
+        background-color: #f1f1f1;
+    }
+
+    .google-button img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+
+    .login-container h2 {
+        color: #f4f4f4;
+    }
+    .error{
+        color: red;
+    }
+</style>
+
+<body>
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <form class="login-form">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div id="message" class="email error"></div>
+            <div class="form-group">
+                <button type="submit">Login</button>
+            </div>
+            
+            <a href="/register">Don't have an account?</a>
+
+        </form>
+        <!-- <div class="container">
+
+            <a href="/auth/google" class="google-button">
+                <img src="google-icon.png" alt="Google Logo">
+                <span>Google</span>
+            </a>
+        </div> -->
+    </div>
+    <script>
+        const messageDiv = document.getElementById('message');
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            try {
+                fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username, password
+                    }),
+                }).then(res => {
+                    if (!res.ok) {
+                        messageDiv.textContent = res.error
+                    }
+
+                    return res.json();
+                }).then(data => {
+                    // Check if login was successful
+                    console.log(data.success);
+                    if (data.message) {
+
+                        window.location.href = '/dashboard';
+                    } else {
+                        messageDiv.textContent = data.error;
+                        messageDiv.style.display = 'block';
+                    }
+                })
+
+
+            }
+            catch (err) {
+                messageDiv.textContent = 'An error occurred. Please try again later.';
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>

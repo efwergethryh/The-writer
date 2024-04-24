@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification Code Form</title>
+  <link rel="stylesheet" href="verification.css">
+  <style>
+    body{
+      background-image: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Enter Verification Code</h2>
+    <form id="verificationForm">
+      <div class="form-group">
+        <input id="i-1" type="text" maxlength="1" class="form-control" required>
+        <input id="i-2" type="text" maxlength="1" class="form-control" required>
+        <input id="i-3" type="text" maxlength="1" class="form-control" required>
+        <input id="i-4" type="text" maxlength="1" class="form-control" required>
+        <input id="i-5" type="text" maxlength="1" class="form-control" required>
+        <input id="i-6" type="text" maxlength="1" class="form-control" required>
+      </div>
+      <button id="verifyButton" class="btn">Verify</button>
+    </form>
+    <br>
+    <a href="">Resend Code</a>
+  </div>
+  <script>
+    document.getElementById('verificationForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const input1 = document.getElementById('i-1').value;
+      const input2 = document.getElementById('i-2').value;
+      const input3 = document.getElementById('i-3').value;
+      const input4 = document.getElementById('i-4').value;
+      const input5 = document.getElementById('i-5').value;
+      const input6 = document.getElementById('i-6').value;
+
+
+      const code = input1 + input2 + input3 + input4 + input5 + input6;
+
+      fetch('api/verify_code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: code })
+      }).then(res => {
+       if(res.ok){
+        // location.assign('/dashboard')
+       }
+      })
+    })
+  </script>
+</body>
+
+</html>

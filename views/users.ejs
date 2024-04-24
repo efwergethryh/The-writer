@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('./partials/header.ejs') %>
+
+<body>
+    <header>
+        <h1>Users</h1>
+    </header>
+
+    <nav>
+        <!-- Add navigation links if needed -->
+    </nav>
+
+    <main>
+        <section>
+           
+
+            <div>
+                <% if (users.length > 0) { %>
+                    <% users.forEach(user => { %>
+                        <div class="card">
+                            <h1>Name: <%= user.name %></h1>
+                            <img src="<%= user.path %>" alt="">
+                        </div>
+
+                    <% }); %>
+                <% } else { %>
+                    <p>No blogs found.</p>
+                <% } %>
+            </div>
+            
+            <!-- Add more widgets as needed -->
+        </section>
+    </main>
+    <%- include('./partials/footer.ejs') %>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

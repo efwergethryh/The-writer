@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header') %>
+
+    <body>
+        <header>
+            <h1>Dashboard</h1>
+            <main>
+                <section>
+
+                    <div class="card" onclick="redirect('')">
+                        <h2>Home</h2>
+                    </div>
+                    <div class="card" onclick="redirect('users')">
+                        <h2>Writers</h2>
+                    </div>
+                    <div class="card" onclick="redirectToProtectedRoute()">
+                        <h2>Blogs</h2>
+                    </div>
+                </section>
+            </main>
+
+
+            <script>
+                function redirect(route) {
+                    window.location.href = '/' + `${route}`
+                }
+                const redirectToProtectedRoute = async () => {
+                    try {
+                        location.assign('/blogs')
+                    } catch (e) {
+                        console.log(error);
+                    }
+                }
+
+
+            </script>
+            <%- include('./partials/footer') %>
+    </body>
+
+</html>
