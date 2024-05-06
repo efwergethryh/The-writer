@@ -301,23 +301,23 @@ body{
   }
 
   /* Style the list of users */
-  .user-list {
+  /* .user-list {
     position: relative;
     
     list-style: none;
     padding: 0;
-  }
+  } */
 
-  .user-list li {
+  /* .user-list li {
     position: relative;
     
     padding: 10px 0;
     cursor: pointer;
-  }
+  } */
 
-  .user-list li:hover {
+  /* .user-list li:hover {
     background-color: #f0f0f0;
-  }
+  } */
 
   /* Style the plus icon */
   .bi-plus {
@@ -330,26 +330,24 @@ body{
   }
 
   /* Adjust the conversation */
-  .conversation {
+  /* .conversation {
     max-height: 500px;
     position: relative;
     left: -130px;
-  }
-  .conversation li{
-    position: relative;
-    left: 60px;
-  }
+  } */
+ 
   /* Adjust the image size */
-  .profile-image {
+  /* .profile-image {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
-  }
+  } */
   .message-form {
     display: none;
   }
 
+  
   /* Adjust the style of the form */
   .message-form input[type="text"] {
     width: calc(100% - 45px);
@@ -362,6 +360,43 @@ body{
   .message-form .input-group-text:hover {
     background-color: #d6d6d6;
   }
+  /* Style for conversation items */
+.conversation {
+    
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .conversation li{
+    width: 14rem;
+    position: relative;
+    left: -60px;
+  }
+  /* Style for profile images */
+  .profile-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  /* Style for profile names */
+  .profile-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+  }
+  
+  /* Style for conversation links */
+  .conversation-link {
+    text-decoration: none;
+    color: black;
+  }
+  
+  /* Style for conversation items on hover */
+  
+  
 @media only screen and (max-width: 767px) {
     .chat-app .people-list {
         height: 465px;
@@ -386,7 +421,53 @@ body{
         overflow-x: auto
     }
 }
-
+.options-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .options-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  .dot {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background-color: #000;
+    border-radius: 50%;
+    margin: 2px 0;
+  }
+  
+  .options-content {
+    display: none;
+    width: 100px;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    z-index: 1;
+  }
+  
+  .option {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .option:hover {
+    background-color: #ddd;
+  }
+  
+  
+  .options-dropdown:hover .options-content {
+    display: block;
+  }
+  
 @media only screen and (min-width: 768px) and (max-width: 992px) {
     .chat-app .chat-list {
         height: 650px;

@@ -21,7 +21,6 @@ const isAuthenticated = (req, res, next) => {
 };
 const checkUser = (req, res, next) => {
     const token = req.cookies.jwt;
-    
     if (token) {
         jwt.verify(token, 'User', async (err, decodedToken) => {
             if (err) {
@@ -31,7 +30,7 @@ const checkUser = (req, res, next) => {
             }
 
             else {
-
+                
                 res.locals.user = await user.findById(decodedToken.userId)
                 
                 next();

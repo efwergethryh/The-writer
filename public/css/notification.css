@@ -1,0 +1,70 @@
+
+  .notification-dot {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    width: 13px;
+    height: 13px;
+    background-color: red;
+    border-radius: 50%;
+    display: none; /* Initially hidden */
+  }
+
+
+  /* Dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown content */
+.dropdown-content {
+    
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 100%; /* Show dropdown below the button */
+    right: 0;
+}
+
+/* Dropdown links */
+
+
+.dropdown-content ul li {
+    padding: 12px 18px;
+}
+
+.dropdown-content ul li a {
+    color: black;
+    text-decoration: none;
+}
+.message {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.message a {
+    color: #007bff; /* Link color */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.message p:hover {
+    color: #0056b3; /* Hover color */
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content ul li a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}

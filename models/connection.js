@@ -13,7 +13,6 @@ async function decryptEnv() {
     try {
       const privateKeyArmored = await fs.promises.readFile('private_key.asc', 'utf-8');
       const passphrase = 'MostafaSalam12345!@#$%'; 
-      console.log(privateKeyArmored);// Using environment variable for passphrase
       const privateKeyObj = (await openpgp.key.readArmored(privateKeyArmored)).keys[0];
       await privateKeyObj.decrypt(passphrase);
       
@@ -24,13 +23,13 @@ async function decryptEnv() {
       };
       
       const { data: decrypted } = await openpgp.decrypt(options);
-      console.log('Decrypted .env file:', decrypted);
+      
     } catch (error) {
       console.error('Error decrypting the .env file:', error);
     }
   }
 async function connectDatabase() {
-    decryptEnv()
+  
     try {
         mongoose.connect(uri)
             .then(() => {

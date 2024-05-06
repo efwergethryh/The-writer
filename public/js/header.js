@@ -7,7 +7,37 @@ var navbar = document.getElementById("navbar");
 
 // Get the offset position of the navbar
 var sticky = navbar.offsetTop;
+function updateUser() {
+    // Get the form element
+    const form = document.getElementById('form-image');
+    const image = document.getElementById('form-image');
+    const formData = new FormData(form);
 
+    fetch('/update-info', {
+        method: 'PUT',
+
+        body: formData
+    })
+        .then(response => {
+            if (response.ok) {
+                alert('User profile updated successfully');
+                // Optionally, redirect to another page or perform other actions
+            }
+            else if (response.status === 400) {
+                alert('Bad request: Please check the submitted data.');
+            } else if (response.status === 500) {
+                alert('Internal server error: Something went wrong on the server.');
+            } else {
+                alert('Failed to update user profile');
+            }
+
+        })
+        .catch(error => {
+            console.error('Error updating user profile:', error);
+            alert('Internal server error');
+        });
+
+}
 // Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
 function myFunction() {
     if (window.pageYOffset >= sticky) {
@@ -42,6 +72,42 @@ function redirect(route) {
     window.location.href = `localhost:3000${route}`
 }
 
+function addNotification(message) {
+
+    fetch('/api/notification', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            message: `You got a new Message ${message}`
+        })
+    })
+    const notifications = document.getElementById('not-list')
+
+    notifications.innerHTML += `
+    <a href="/chats">${message} 1</a>   
+    `
+    document.querySelector('.notification-dot').style.display = 'block';
+    showMessage('new-message');
+}
+const socket = io('http://localhost:3000/');
+console.log(socket);
+socket.on('message', function (data) {
+    console.log(data);
+    addNotification(data.message);
+});
+
+function showMessage(id) {
+    var messageBox = document.getElementById(`${id}`);
+    messageBox.style.display = 'block';
+    const delay = 3000;
+
+    setTimeout(() => {
+        messageBox.style.display = 'none';
+    }, delay);
+
+}
 // Pop up
 // Get the popup container and close button elements
 var popupContainer = document.getElementById('popupContainer');
@@ -59,7 +125,7 @@ popupButton.addEventListener('click', function () {
 closeButton.addEventListener('click', function () {
     popupContainer.style.display = 'none';
 });
-// ---------------------------------------------------------------------------
+
 var edit_profile = document.getElementById('editprofile');
 
 var closeButton_edit = document.getElementById('closeButton_edit');
@@ -77,12 +143,7 @@ closeButton_edit.addEventListener('click', function () {
     edit_profile.style.display = 'none';
 });
 
-//----------------------------------confirm--------------------------------------
 
-
-
-
-//----------------------------------------------------------------------------
 $(document).ready(function () {
 
     $("#form-image").change(function (data) {
@@ -100,9 +161,6 @@ $(document).ready(function () {
     });
 });
 
-//-----------------------Upload pictures-----------------------------------
-
-//-----------------------verification-----------------------------------
 
 
 

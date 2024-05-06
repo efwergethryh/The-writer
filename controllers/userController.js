@@ -7,7 +7,6 @@ const Picture = require('../models/picture')
 require('../models/auth')
 require('dotenv').config();
 const passport = require('passport')
-// const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 
@@ -66,7 +65,6 @@ const verification = (req, res) => {
     res.render('User/verification')
 }
 const _sendConfirmationEmail = (email, code) => {
-    console.log('code sent');
     const CLIENT_ID = process.env.CLIENT_ID
     const CLIENT_SECRET = process.env.CLIENT_SECRET
     const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
@@ -128,7 +126,7 @@ const login = async (req, res) => {
             });
 
 
-        res.status(201).json({ message: 'Logged in successfully' });
+        res.status(201).json({ message: 'Logged in successfully', Token:token});
     } catch (error) {
         console.log(error);
     }
@@ -209,7 +207,7 @@ const google_register = async (req, res, next) => {
         prompt: 'consent', // Force user consent for previously authorized scopes
         accessType: 'offline' // Request refresh token for offline access  
     }
-    console.log(options);
+    
     passport.authenticate('google', options)(req, res, next);
 
 }
