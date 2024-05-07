@@ -1,6 +1,5 @@
 const express = require('express');
 const passport = require('passport');
-const mongoose = require('mongoose');
 const session = require('express-session');
 const http = require('http');
 const ioSocket = require('socket.io');

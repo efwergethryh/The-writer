@@ -1,1 +1,0 @@
-gpg --encrypt --recipient 'your.email@example.com' .env

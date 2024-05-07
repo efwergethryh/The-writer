@@ -50,7 +50,7 @@ const verify_code = async (req, res) => {
 
             const token = createToken(newUser.id);
 
-            res.cookie("jwt", token, { maxAge: 3600000, httpOnly: true, secure: true });
+            res.cookie(process.env.SECRET_TOKEN, token, { maxAge: 3600000, httpOnly: true, secure: true });
             res.status(200).json({ message: 'Verified' });
         } else {
 
