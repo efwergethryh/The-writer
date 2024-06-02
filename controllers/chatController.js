@@ -3,8 +3,8 @@ const conversation = require('../models/conversation')
 const bcrypt = require('bcrypt')
 const user = require('../models/User')
 const Notification = require('../models/Notification')
-const socketIo = require('socket.io');
-const io = require('../models/socket')
+
+
 
 const conversations = async (req, res) => {
     try {
@@ -16,7 +16,7 @@ const conversations = async (req, res) => {
             const receiver = await user.findById(c.members[1]);
             return [sender, receiver];
         }));
-        res.status(200).json({ conversations , Members });
+        res.status(200).json({ conversations, Members });
     } catch (error) {
         console.log(error);
     }
@@ -33,7 +33,7 @@ const chat_page = async (req, res) => {
             return [sender, receiver];
         }));
 
-        res.render('Chats/chats', { conv, Members, Users })
+        res.render('Chats/chats', { conv, Members, Users, userId:id })
     } catch (err) {
         console.log(err);
     }
@@ -82,7 +82,7 @@ const delete_single_conversation = async (req, res) => {
 }
 const new_notification = (req, res) => {
     try {
-        
+
         const id = res.locals.user._id
 
         const notification = new Notification({
@@ -98,26 +98,23 @@ const new_notification = (req, res) => {
     }
 }
 const Conversation = async (req, res) => {
-
-
     try {
         const id = req.params.id;
         const _conversation = await conversation.findById({ _id: id })
         const User = await user.findById({ _id: _conversation.members[1] })
         res.status(200).json({ _conversation, User });
     } catch (error) {
-        res.status(400).json('Error!' + error)
+        res.status(400).json({Error:error})
     }
 }
 const messages = async (req, res) => {
     const id = req.params.id;
-
     try {
         const Messages = await message.find({ conversation: id }).exec()
 
         res.status(200).json({ Messages });
     } catch (error) {
-        res.status(400).json(`error +${error}`)
+        res.status(400).json({Error:error})
     }
 }
 const send_message = async (req, res) => {
@@ -133,7 +130,7 @@ const send_message = async (req, res) => {
                 text: req.body.text
             });
             await newMessage.save();
-            res.status(200).json({message:newMessage , m:'sent successfully'});
+            res.status(200).json({ message: newMessage, m: 'sent successfully',receiver_id });
         } else {
             const Conversation = new conversation({
                 members: [sender_id, receiver_id]
@@ -146,12 +143,12 @@ const send_message = async (req, res) => {
             });
             await newMessage.save();
 
-            io.emit('message', { message: req.body.text });
+            
 
-            res.status(200).json('sent successfully');
+            res.status(200).json({ message: newMessage, m: 'sent successfully',receiver_id });
         }
     } catch (error) {
-        res.status(400).json('Error!' + error)
+        res.status(400).json({error})
     }
 }
 

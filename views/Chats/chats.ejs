@@ -21,143 +21,158 @@
 <body>
 
     <%- include('../popups/notificationpopups') %>
-    <div class="container">
-        
-        <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card chat-app">
-                    
-                    <div id="plist" class="people-list">
-                        <button id="message-writer" type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            style="position: relative; right: -80%; top: -10px;" data-bs-target="#newConversationModal">
-                            <i class="bi bi-plus me-0.5"></i>
-                        </button>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text " style="height: 2.5rem;"><i
-                                        class="fa fa-search"></i></span>
-                            </div>
-                            <input type="text" class="form-control" placeholder="Search...">
-                        </div>
-                        <ul class="list-unstyled chat-list mt-2 mb-0">
-                            <ul class="m-b-0">
-                                <ul id="conversation-list">
-                                    <% conv.forEach(async (conversation, index)=> { %>
-                                        <div class="conversation">
-                                            <li>
-                                                <a onclick="assign('<%= conversation._id %>')">
-                                                    <img src="<%= Members[index][1].path %>"
-                                                        alt="<%= Members[index][1].name %>'s Profile Picture"
-                                                        class="profile-image">
-                                                    <p style="color: black; ">
-                                                        <%= Members[index][1].name %>
-                                                    </p>
-                                                </a>
-                                            </li>
-                                        </div>
-                                        <% }); %>
+        <div class="container">
 
+            <div class="row clearfix">
+                <div class="col-lg-12">
+                    <div class="card chat-app">
+
+                        <div id="plist" class="people-list">
+                            <button id="message-writer" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                style="position: relative; right: -80%; top: -10px;"
+                                data-bs-target="#newConversationModal">
+                                <i class="bi bi-plus me-0.5"></i>
+                            </button>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text " style="height: 2.5rem;"><i
+                                            class="fa fa-search"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search...">
+                            </div>
+                            <ul class="list-unstyled chat-list mt-2 mb-0">
+                                <ul class="m-b-0">
+                                    <ul id="conversation-list">
+                                        <% conv.forEach(async (conversation, index)=> { %>
+                                            <div class="conversation">
+                                                <li>
+                                                    <a onclick="assign('<%= conversation._id %>')">
+                                                        <% if(userId==Members[index][0]){ %>
+                                                            <img src="<%= Members[index][0].path %>"
+                                                                alt="<%= Members[index][0].name %>'s Profile Picture"
+                                                                class="profile-image">
+                                                            <p style="color: black; ">
+                                                                <%= Members[index][0].name %>
+                                                            </p>
+                                                            <%}else {%>
+                                                                <img src="<%= Members[index][1].path %>"
+                                                                    alt="<%= Members[index][1].name %>'s Profile Picture"
+                                                                    class="profile-image">
+                                                                <p style="color: black; ">
+                                                                    <%= Members[index][1].name %>
+                                                                </p>
+                                                                <%}%>
+
+                                                    </a>
+                                                </li>
+                                            </div>
+                                            <% }); %>
+
+                                    </ul>
                                 </ul>
                             </ul>
-                        </ul>
-                    </div>
-                    <div class="chat">
-                        <div class="chat-header clearfix">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <a id="chat-img" id="img" href="javascript:void(0);" data-toggle="modal"
-                                        data-target="#view_info">
-
-                                    </a>
-                                    <div id="chat-about" class="chat-about">
-
-                                    </div>
-
-                                    <div id="chat-history" class="message-container"></div>
-                                    <div class="col-lg-6 hidden-sm text-right">
-                                        <a href="javascript:void(0);" class="btn btn-outline-secondary"><i
-                                                class="fa fa-camera"></i></a>
-                                        <a href="javascript:void(0);" class="btn btn-outline-primary"><i
-                                                class="fa fa-image"></i></a>
-                                        <a href="javascript:void(0);" class="btn btn-outline-info"><i
-                                                class="fa fa-cogs"></i></a>
-                                        <a href="javascript:void(0);" class="btn btn-outline-warning"><i
-                                                class="fa fa-question"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="chat-history">
-                            </div>
-                            <div class="chat-message clearfix">
-                                <div class="input-group mb-0">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" onclick="send_message('<%= user._id %>')"><i
-                                                class="fa fa-send"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control" id="text" name="text"
-                                        placeholder="Enter text here..." required>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        <div class="chat">
+                            <div class="chat-header clearfix">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <a id="chat-img" id="img" href="javascript:void(0);" data-toggle="modal"
+                                            data-target="#view_info">
 
-        <!-- New Conversation Modal -->
-        
-        <div class="modal fade" id="newConversationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">New Conversation</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <%- include('../popups/notificationpopups') %>
-                    <div class="modal-body">
-                        
-                        <div class="mb-3">
-                            <label for="recipient" class="form-label">Chat with other writers</label>
-                            <ul class="user-list" id="recipient">
-                               
-                                    <% Users.forEach(user=> { %>
-                                        <li value="<%= user._id %>" onclick="showForm('<%= user._id %>')">
-                                            <img src="<%= user.path%>"
-                                                style="border-radius:50%; width: 40px; position: relative; top: -7px; left: 12px; "
-                                                alt="">
-                                            <p>
-                                                <%= user.name %>
-                                            </p>
-                                        </li>
-                                        <div class="message-form" id="messageForm_<%= user._id %>">
-                                            <div class="input-group mb-3">
-                                                <input type="text" id="message_<%= user._id %>" class="form-control"
-                                                    placeholder="Type your message here...">
-                                                <button class="btn btn-primary" id="start" name="text" type="button"
-                                                    onclick="startConversation('<%= user._id %>')">Send message</button>
-                                            </div>
+                                        </a>
+                                        <div id="chat-about" class="chat-about">
+
                                         </div>
-                                        <% }); %>
 
-                                        
-                            </ul>
+                                        <div id="chat-history" class="message-container"></div>
+                                        <div class="col-lg-6 hidden-sm text-right">
+                                            <a href="javascript:void(0);" class="btn btn-outline-secondary"><i
+                                                    class="fa fa-camera"></i></a>
+                                            <a href="javascript:void(0);" class="btn btn-outline-primary"><i
+                                                    class="fa fa-image"></i></a>
+                                            <a href="javascript:void(0);" class="btn btn-outline-info"><i
+                                                    class="fa fa-cogs"></i></a>
+                                            <a href="javascript:void(0);" class="btn btn-outline-warning"><i
+                                                    class="fa fa-question"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat-history">
+                                </div>
+                                <div class="chat-message clearfix">
+                                    <div class="input-group mb-0">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" onclick="send_message('<%= user._id %>')"><i
+                                                    class="fa fa-send"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" id="text" name="text"
+                                            placeholder="Enter text here..." required>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <!-- New Conversation Form -->
-
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Bootstrap Bundle with Popper -->
+
+            <!-- New Conversation Modal -->
+
+            <div class="modal fade" id="newConversationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">New Conversation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <%- include('../popups/notificationpopups') %>
+                            <div class="modal-body">
+
+                                <div class="mb-3">
+                                    <label for="recipient" class="form-label">Chat with other writers</label>
+                                    <ul class="user-list" id="recipient">
+                                        <input type="hidden" id="user-id" value="<%= userId %>">
+
+                                        <% Users.forEach(user=> { %>
+                                            <li value="<%= user._id %>" onclick="showForm('<%= user._id %>')">
+                                                <img src="<%= user.path%>"
+                                                    style="border-radius:50%; width: 40px; position: relative; top: -7px; left: 12px; "
+                                                    alt="">
+                                                <p>
+                                                    <%= user.name %>
+                                                </p>
+                                            </li>
+                                            <div class="message-form" id="messageForm_<%= user._id %>">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" id="message_<%= user._id %>" class="form-control"
+                                                        placeholder="Type your message here...">
+                                                    <button class="btn btn-primary" id="start" name="text" type="button"
+                                                        onclick="startConversation('<%= user._id %>')">Send
+                                                        message</button>
+                                                </div>
+                                            </div>
+                                            <% }); %>
 
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-        <!-- Bootstrap Icons Script -->
+                                    </ul>
+                                </div>
+                                <!-- New Conversation Form -->
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script> -->
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Bootstrap Bundle with Popper -->
 
 
-        <script src="js/chat.js"></script>`
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+            <!-- Bootstrap Icons Script -->
+
+            <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.min.js"></script>
+            <script src="/socket.io/socket.io.js"></script>
+            <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script> -->
+
+
+            <script src="js/chat.js"></script>`

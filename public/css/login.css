@@ -1,14 +1,17 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    
+
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
 }
-
+body {
+    width: 100vw;  /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+}
 .login-container {
     width: 300px;
     padding: 20px;
@@ -60,3 +63,11 @@ body {
     font-size: 0.8em;
     font-weight: bold;
 }
+@media screen and (min-width: 730px) {
+    body {
+        width: 20vw;
+        /* Adjusted width for larger screens */
+        height: 20vh;
+        /* Adjusted height for larger screens */
+    }
+} 

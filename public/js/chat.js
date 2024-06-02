@@ -1,20 +1,27 @@
 
-const socket = io('http://localhost:3000/');
+const userId = document.getElementById('user-id').value;
+console.log(userId);
+const socket = io('https://writer.serveo.net', {
+    query: {
+        userId: userId
+    }
+});
 socket.on('connection ', () => {
+
+
     console.log('Connected to server');
 });
 socket.on('disconnect', () => {
     console.log('Disconnected from server');
 });
 
-
 socket.on('error', (error) => {
     console.error('Error receiving message:', error);
 });
 
+//sending messages
 function send_message(id) {
     const text = document.getElementById('text').value;
-
     try {
         fetch('/api/send-message', {
             method: 'POST',
@@ -30,32 +37,8 @@ function send_message(id) {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                // Fetch the updated conversation messages after sending the message
-                // fetch(`/api/conversation/${conv_id}/messages`, {
-                //     method: 'GET'
-                // })
-                //     .then(response => response.json())
-                //     .then(data => {
-                //         document.getElementById('text').value = '';
-                //         const chatHistory = document.getElementById('chat-history');
-                //         chatHistory.innerHTML = '';
-                //         data.Messages.forEach(message => {
-                //             chatHistory.innerHTML += `
-                //                 <div class="${message.sender === '<%= user._id %>' ? 'outgoing-message' : 'incoming-message'}">
-                //                     <div class="message">
-                //                         <p>${message.text}</p>
-                //                         <span class="metadata">${message.createdAt}</span>
-                //                     </div>
-                //                 </div>
-                //             `;
-                //         });
-                //         chatHistory.scrollTop = chatHistory.scrollHeight;
-                //     })
-                //     .catch(error => console.error('Error:', error));
-
-                // Emit the message using socket.io after sending it via fetch
-
-                socket.emit('message', { message: data });
+                socket.emit('message', { message: text, conv_id });
+                document.getElementById('text').value = ``;
             });
     } catch (error) {
         console.log(error);
@@ -82,32 +65,44 @@ function updateChat(data) {
     // Append the paragraph to the message container
     messageContainer.appendChild(paragraph);
 }
+//displaying real time messages
 socket.on('message', (data) => {
-    // Extract the message object from the data
     const message = data.message;
     console.log(data);
 
+    // Create the outer div and assign the appropriate class based on the message sender
+    const outerDiv = document.createElement('div');
+    outerDiv.id = `Message-${message.conv_id}`;
+    outerDiv.className = message.sender === userId ? 'outgoing-message' : 'incoming-message';
+
+    // Create the inner div with the class 'message'
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
+
     // Create a new paragraph element for the incoming message
     const newParagraph = document.createElement('p');
-    newParagraph.textContent = data.message.message.text;
-    // Determine if the message sender is the current user
-    const isOutgoingMessage = data.message.message.sender === '<%= user._id %>'; // Assuming '<%= user._id %>' is replaced with the actual user ID value on the client side
+    newParagraph.id = `message-${message.conv_id}`;
+    newParagraph.textContent = message.message;
+
+    // Create metadata span for the timestamp
     const metadataSpan = document.createElement('span');
     metadataSpan.classList.add('metadata');
-    metadataSpan.textContent = data.message.message.createdAt;
-    // Determine the CSS class based on whether the message is outgoing or incoming
-    const messageClass = isOutgoingMessage ? 'outgoing-message' : 'incoming-message';
+    metadataSpan.textContent = message.createdAt;
+
+    // Append the new paragraph and metadata span to the message div
     messageDiv.appendChild(newParagraph);
     messageDiv.appendChild(metadataSpan);
-    // Apply the CSS class to the new paragraph element
-    newParagraph.classList.add(messageClass);
+
+    // Append the message div to the outer div
+    outerDiv.appendChild(messageDiv);
+
     console.log(newParagraph);
-    // Append the new paragraph to the chat history container
+
+    // Append the outer div to the chat history container
     const chatHistory = document.getElementById('chat-history');
-    chatHistory.appendChild(newParagraph);
+    chatHistory.appendChild(outerDiv);
 });
+
 
 function clear_chat(id) {
 
@@ -187,7 +182,6 @@ function assign(id) {
             <div class="options-content">
                 <a class="option" onclick="clear_chat(${conv_id})">Clear chat</a>
                 <a class="option" onclick="delete_conversation('${conv_id}')">Delete chat</a>
-
             </div>
         </div>
 
@@ -207,17 +201,26 @@ function assign(id) {
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = '';
             data.Messages.forEach(message => {
+                const timestamp = message.createdAt;
+                const date = new Date(timestamp);
+
+                // Format the date
+                const formattedDate = `${date.toLocaleDateString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+
+                console.log(formattedDate);
+
                 chatHistory.innerHTML += `
-                <div id="Message-${conv_id}"class="${message.sender === '<%= user._id %>' ? 'outgoing-message' : 'incoming-message'}">
+                <div id="Message-${conv_id}"class="message-container ${message.sender === userId ? 'outgoing-message' : 'incoming-message'}">
                     <div class="message">
                         <p id="message-${conv_id}">${message.text}</p>
-                        <span class="metadata">${message.createdAt}</span>
+                        <span class="metadata">${formattedDate}</span>
                     </div>
                 </div>
         `;
             });
         })
         .catch(error => console.error('Error:', error));
+    socket.emit('join', conv_id);
 }
 
 // Error handling for the socket connection

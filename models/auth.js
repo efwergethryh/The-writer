@@ -2,9 +2,14 @@ const passport = require('passport');
 const user = require('../models/User')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const cors = require('cors');
+
+require('dotenv').config();
+
+
 const createToken = (id) => {
 
-    const token = jwt.sign({ userId: id }, 'User', { expiresIn: '1h' })
+    const token = jwt.sign({ userId: id }, process.env.SECRET_TOKEN, { expiresIn: '1h' })
     return token
 }
 require('dotenv').config();
@@ -21,9 +26,9 @@ function generateUserName(email) {
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: 'http://localhost:3000/auth/google/callback',
+    callbackURL: 'https://writer.serveo.net/auth/google/callback',
     passReqToCallback: true,
-    scope: ['profile', 'email'] // Add the required scope parameter
+    scope: ['profile', 'email']
 }, async (req, accessToken, refreshToken, profile, done) => {
     const { sub, name, email, picture } = profile._json;
     const res = req.res; // Get the response object from the request object
@@ -50,9 +55,7 @@ passport.use(new GoogleStrategy({
                 googleId: sub
             });
             await newUser.save();
-
-            // Redirect to the dashboard
-            res.redirect('/dashboard');
+            
             return done(null, newUser);
 
         }

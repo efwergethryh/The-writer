@@ -5,7 +5,7 @@ window.onscroll = function () { myFunction() };
 // Get the navbar
 var navbar = document.getElementById("navbar");
 
-// Get the offset position of the navbar
+
 var sticky = navbar.offsetTop;
 function updateUser() {
     // Get the form element
@@ -86,16 +86,33 @@ function addNotification(message) {
     const notifications = document.getElementById('not-list')
 
     notifications.innerHTML += `
-    <a href="/chats">${message} 1</a>   
+    <a href="/chats">You got a new Message ${message.message} 1</a>   
     `
     document.querySelector('.notification-dot').style.display = 'block';
     showMessage('new-message');
 }
 const socket = io('http://localhost:3000/');
-console.log(socket);
+
 socket.on('message', function (data) {
-    console.log(data);
+
     addNotification(data.message);
+    if (!('Notification' in window)) {
+        alert('This browser does not support notifications.');
+        return;
+    }
+
+    // Check the current Notification permission
+    if (Notification.permission === 'granted') {
+        // If permission is already granted, create a notification
+        showNotification();
+    } else if (Notification.permission !== 'denied') {
+        // If permission is not denied, request permission
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                showNotification();
+            }
+        });
+    }
 });
 
 function showMessage(id) {
@@ -107,6 +124,14 @@ function showMessage(id) {
         messageBox.style.display = 'none';
     }, delay);
 
+}
+function showNotification() {
+    const options = {
+        body: 'You have new messages!',
+        icon: 'path/to/icon.png'
+    };
+
+    new Notification('Hello!', options);
 }
 // Pop up
 // Get the popup container and close button elements

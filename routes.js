@@ -2,23 +2,47 @@ const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
 const http = require('http');
-const ioSocket = require('socket.io');
+const socketIo = require('socket.io');
 const cookieParser = require('cookie-parser');
 const blogRouter = require('./Routes/blogRoutes');
 const userRouter = require('./Routes/userRoutes');
-const chatRouter =  require('./Routes/chatRoutes');
-const { checkUser, isAuthenticated } = require('./Middleware/AuthMiddleware');
+const chatRouter = require('./Routes/chatRoutes');
+const apis = require('./Routes/api');
+
+const cors = require('cors');
+const { checkUser } = require('./Middleware/AuthMiddleware');
 const { connectDatabase } = require('./models/connection');
 const Notification = require('./models/Notification');
 
+
 // Initialize Express app
 const app = express();
+
+app.use((req, res, next) => {
+    res.setHeader('User-Agent', 'MyApp/1.0 (Node.js/Express)');
+    next();
+});
 
 // Create HTTP server
 const server = http.createServer(app);
 
 // Initialize Socket.IO
-const io = ioSocket(server);
+const io = socketIo(server, {
+    cors: {
+        origin: 'https://writer.serveo.net',
+        methods: ['GET', 'POST'],
+        allowedHeaders: ['Content-Type'],
+        credentials: true
+    }
+});
+
+// Use CORS middleware
+app.use(cors({
+    origin: 'https://localhost:3000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+    credentials: true
+}));
 
 // Connect to database
 connectDatabase();
@@ -34,38 +58,49 @@ app.use(session({
     saveUninitialized: false
 }));
 
-// Routes
+
 app.get('/', (req, res) => {
     res.render('homepage');
 });
 
-app.get('/dashboard', checkUser, async(req, res) => {
-    const id = res.locals.user._id
-    const notifications =await Notification.find({userId:id}).exec();
-    console.log(notifications);
-    res.render('dashboard',{notifications});
+app.get('/dashboard', checkUser, async (req, res) => {
+    try {
+        const id = res.locals.user._id
+        const notifications = await Notification.find({ userId: id }).exec();
+        console.log(notifications);
+        res.render('dashboard', { notifications });
+    } catch (e) {
+        console.log(e);
+    }
 });
 
 app.use(userRouter);
 app.use('/blogs', blogRouter);
 app.use(chatRouter);
-
+app.use('/api', apis);
 app.use((req, res) => {
     res.status(404).render('404page');
 });
 
-// Socket.IO connection
-
 io.on('connection', (socket) => {
-    console.log('New client connected');
-    
+    const userId = socket.handshake.query.userId;
+    console.log(`User with ID ${userId} connected`);
+    console.log(socket.rooms);
+    // console.log(`New client connected ${socket.id}`);
     socket.on('disconnect', () => {
         console.log('Client disconnected');
-    }); 
+    });
+    socket.on('join', (conv_id) => {
 
+
+        socket.join(conv_id);
+        console.log(`User with ID ${userId} joined`);
+    });
     socket.on('message', (data) => {
-        
-        io.emit('message',{message:data.message})
+        const { message, conv_id, receiver_id } = data;
+        console.log(`Message from ${socket.id} to ${receiver_id}: ${message}`);
+        io.to(conv_id).emit('message', { message: { message, sender: userId, createdAt: new Date() } });
+        io.emit('message', { message: { message, sender: userId, createdAt: new Date() } });
     });
 
     socket.on('connect_error', (error) => {
@@ -88,9 +123,10 @@ passport.deserializeUser(function (user, done) {
 });
 
 // Start server
+const HOST = '0.0.0.0';
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+server.listen(PORT, HOST, () => {
+    console.log(`Server running on port http://${HOST}:${PORT}/`);
 });
 
 module.exports = io;

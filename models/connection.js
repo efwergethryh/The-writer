@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const http = require('http');
 // const WebSocket = require('ws');
-const redis = require('redis');
+
 const fs = require('fs');
 require('dotenv').config()
 const openpgp = require('openpgp');

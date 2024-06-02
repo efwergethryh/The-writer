@@ -22,7 +22,6 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
 });
-// router.use(bodyParser.json())
 router.use(express.json({ limit: '50mb' }))
 router.use(cookieParser())
 router.get('/auth/google/callback', passport.authenticate("google", {
@@ -40,7 +39,6 @@ router.put('/update-info', checkUser, upload.single('picture'), userController.u
 router.post('/api/verify_code', userController.verify_code);
 router.post('/sendEmail', userController._sendConfirmationEmail);
 router.post('/api/login', userController.login)
-
 router.post('/api/register', userController.register)
 
 router.delete('/deleteuser/:id', userController._delete)

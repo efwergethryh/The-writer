@@ -8,11 +8,19 @@ require('../models/auth')
 require('dotenv').config();
 const passport = require('passport')
 const bcrypt = require('bcrypt')
+const stripe = require('stripe')('sk_test_51PK0VVP5RKencoqOT5jYzt2VRiNz8QEYqZNzGp40O1dRrbNr241E7y3xABrsBatFC3seL2IvKHHYJEyr5eCsLiKg00d2fy09WB');
+
+
 const jwt = require('jsonwebtoken');
 
+const braintree = require('braintree');
 
-
-
+const gateway = new braintree.BraintreeGateway({
+    environment: braintree.Environment.Sandbox,
+    merchantId: 'k4dtvv3bd3pcy8jk',
+    publicKey: '5znmvqxtttqvtzqn',
+    privateKey: '83582472e93671d6054d34407ca6589b',
+});
 function generateVerificationCode() {
 
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -27,6 +35,53 @@ const get_users = async (req, res) => {
     const id = res.locals.user._id;
     const Users = await user.find({ _id: { $ne: id } }).exec();
     res.send(Users)
+}
+const generate_token = async (req, res) => {
+    gateway.clientToken.generate({}, (err, response) => {
+        if (err) {
+            res.status(500).send(err);
+        } else { 
+            res.status(200).json({ token: response.clientToken });
+        }
+    });
+}
+
+const charge = async(req, res) => {
+    try {
+        const { amount, currency, source, description } = req.body;
+
+        console.log(req.body);
+        const charge = await stripe.charges.create({
+            amount,
+            currency,
+            source,
+            description
+        });
+
+        // Send the charge object as the API response
+        res.json(charge);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while processing the payment' });
+    }
+}
+const checkout = (req, res) => {
+    const nonceFromTheClient = req.body.paymentMethodNonce;
+    const amount = req.body.amount;
+
+    gateway.transaction.sale({
+        amount: amount,
+        paymentMethodNonce: nonceFromTheClient,
+        options: {
+            submitForSettlement: true
+        }
+    }, (err, result) => {
+        if (result) {
+            res.send(result);
+        } else {
+            res.status(500).send(err);
+        }
+    });
 }
 const verify_code = async (req, res) => {
     try {
@@ -68,7 +123,7 @@ const _sendConfirmationEmail = (email, code) => {
     const CLIENT_ID = process.env.CLIENT_ID
     const CLIENT_SECRET = process.env.CLIENT_SECRET
     const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
-    const REFRESH_TOKEN =process.env.REFRESH_TOKEN
+    const REFRESH_TOKEN = process.env.REFRESH_TOKEN
     const oatuth = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
     oatuth.setCredentials({ refresh_token: REFRESH_TOKEN })
     const accessToken = oatuth.getAccessToken()
@@ -126,7 +181,7 @@ const login = async (req, res) => {
             });
 
 
-        res.status(201).json({ message: 'Logged in successfully', Token:token});
+        res.status(201).json({ message: 'Logged in successfully', Token: token });
     } catch (error) {
         console.log(error);
     }
@@ -207,7 +262,7 @@ const google_register = async (req, res, next) => {
         prompt: 'consent', // Force user consent for previously authorized scopes
         accessType: 'offline' // Request refresh token for offline access  
     }
-    
+
     passport.authenticate('google', options)(req, res, next);
 
 }
@@ -224,5 +279,8 @@ module.exports = {
     verification,
     verify_code,
     google_register,
-    get_users
+    get_users,
+    checkout,
+    generate_token,
+    charge
 }   
